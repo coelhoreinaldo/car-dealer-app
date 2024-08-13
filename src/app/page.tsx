@@ -17,7 +17,7 @@ export default function Home() {
   const fetchData = async () => {
     try {
       const data = await fetchVehicleType();
-      setVehicleTypes(data);
+      setVehicleTypes(data.Results);
     } catch (error) {
       console.error(error); // TODO: show something
     }
@@ -31,7 +31,6 @@ export default function Home() {
     setVehicleInput({ ...vehicleInput, [e.target.name]: e.target.value });
   };
 
-  console.log(vehicleInput);
   return (
     <main className="flex min-h-screen flex-col items-center p-6">
       <section className="flex flex-col w-full gap-2">
@@ -45,7 +44,7 @@ export default function Home() {
             <option value="">Select a vehicle type</option>
             {vehicleTypes &&
               vehicleTypes.map((vehicleType) => (
-                <option key={vehicleType.MakeId} value={vehicleType.MakeName}>
+                <option key={vehicleType.MakeId} value={vehicleType.MakeId}>
                   {vehicleType.MakeName}
                 </option>
               ))}
