@@ -3,8 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { VehicleType } from './lib/definitions';
 import { fetchVehicleType, getModelYears } from './utils/fetchFunctions';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+
   const [vehicleTypes, setVehicleTypes] = useState<VehicleType[] | null>(null);
   const [vehicleInput, setVehicleInput] = useState({
     vehicleType: '',
@@ -16,7 +19,7 @@ export default function Home() {
       const data = await fetchVehicleType();
       setVehicleTypes(data);
     } catch (error) {
-      console.error(error);
+      console.error(error); // TODO: show something
     }
   };
 
@@ -65,9 +68,15 @@ export default function Home() {
           </select>
         </div>
       </section>
+
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-blue-100"
         disabled={!vehicleInput.modelYear || !vehicleInput.vehicleType}
+        onClick={() =>
+          router.push(
+            `result/${vehicleInput.vehicleType}/${vehicleInput.modelYear} `
+          )
+        }
       >
         Next
       </button>
