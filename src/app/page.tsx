@@ -98,7 +98,7 @@ export default function Home() {
             disabled={!vehicleInput.modelYear || !vehicleInput.vehicleType}
             onClick={() =>
               router.push(
-                `result/${vehicleInput.vehicleType}/${vehicleInput.modelYear}`
+                `result/${vehicleInput.vehicleType}/${vehicleInput.modelYear}`,
               )
             }
           >

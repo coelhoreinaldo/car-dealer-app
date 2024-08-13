@@ -8,7 +8,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 
 const Result = ({ params }: any) => {
   const [vehicleModels, setVehicleModels] = useState<VehicleModel[] | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
