@@ -1,24 +1,29 @@
 'use client';
 
+import Loading from '@/app/components/loading';
 import { VehicleModel } from '@/app/lib/definitions';
 import { fetchVehicle } from '@/app/utils/fetchFunctions';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 const Result = ({ params }: any) => {
   const [vehicleModels, setVehicleModels] = useState<VehicleModel[] | null>(
     null
   );
+  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const data = await fetchVehicle(params.makeId, params.modelYear);
       setVehicleModels(data);
       setErrorMessage('');
     } catch (error) {
       setErrorMessage('Something went wrong. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,25 +52,33 @@ const Result = ({ params }: any) => {
       >
         Back
       </button>
-      {errorMessage ? (
-        <h3 className="text-lg font-semibold text-gray-400">{errorMessage}</h3>
+      {loading ? (
+        <Loading />
       ) : (
-        <section className="grid grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 2xl:grid-cols-5 gap-6 w-full">
-          {vehicleModels &&
-            vehicleModels.map((vehicle) => (
-              <div
-                key={vehicle.Model_ID}
-                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-              >
-                <h3 className="text-lg font-semibold text-gray-800 break-words">
-                  {vehicle.Model_Name}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Model ID: {vehicle.Model_ID}
-                </p>
-              </div>
-            ))}
-        </section>
+        <>
+          {errorMessage ? (
+            <h3 className="text-lg font-semibold text-gray-400">
+              {errorMessage}
+            </h3>
+          ) : (
+            <section className="grid grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 2xl:grid-cols-5 gap-6 w-full">
+              {vehicleModels &&
+                vehicleModels.map((vehicle) => (
+                  <div
+                    key={vehicle.Model_ID}
+                    className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                  >
+                    <h3 className="text-lg font-semibold text-gray-800 break-words">
+                      {vehicle.Model_Name}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Model ID: {vehicle.Model_ID}
+                    </p>
+                  </div>
+                ))}
+            </section>
+          )}
+        </>
       )}
     </section>
   );

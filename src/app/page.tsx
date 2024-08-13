@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { VehicleType } from './lib/definitions';
 import { fetchVehicleType, getModelYears } from './utils/fetchFunctions';
 import { useRouter } from 'next/navigation';
+import Loading from './components/loading';
 
 export default function Home() {
   const router = useRouter();
@@ -14,13 +15,18 @@ export default function Home() {
     modelYear: '',
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchData = async () => {
+    setLoading(true);
+
     try {
       const data = await fetchVehicleType();
       setVehicleTypes(data.Results);
     } catch (error) {
       setErrorMessage('Something went wrong. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,9 +51,9 @@ export default function Home() {
             <div className="flex flex-col">
               <label
                 htmlFor="vehicleType"
-                className="text-gray-700 font-semibold mb-2"
+                className="text-gray-700 font-semibold mb-2 flex w-full gap-2"
               >
-                Vehicle Type
+                Vehicle Type <span>{loading ? <Loading /> : null}</span>
               </label>
               <select
                 name="vehicleType"
